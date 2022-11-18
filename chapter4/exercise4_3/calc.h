@@ -8,3 +8,5 @@ int getop(char []);
 int getch(void);
 void ungetch(int);
 void ungets(char []);
+int getch_s(void);
+void ungetch_s(int);
