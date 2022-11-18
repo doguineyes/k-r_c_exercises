@@ -6,6 +6,9 @@
   to du­ plicate it, and to swap the top two elements. Add a command to clear the stack.
 
   Exercise 4-5 Add access to library functions like sin, exp, and pow.
+
+  Exercise 4-6 Add commands for handling variables. (It's easy to provide twenty-six variables with single-letter names.)
+  Add a variable for the most recently printed value.
 */
 #include <stdio.h>
 #include <stdlib.h> // atof
@@ -34,6 +37,13 @@ int main() {
   int type;
   double op2;
   char s[MAXOP];
+  // Exercise 4-6 add vars
+  double vars[26];
+  int last_var_index = 0;
+  double v = 0.0;
+  for (int i = 0; i < 26; i++) {
+    vars[i] = 0.0;
+  }
 
   while((type = getop(s)) != EOF) {
     switch(type) {
@@ -93,11 +103,26 @@ int main() {
         push(op2);
         push(op1);
         break;
+      // Exercise 4-6
+      case '=':
+        pop(); // Pop old vars name?
+        vars[last_var_index] = pop();
+        push(vars[last_var_index]); // If do not push variable assignment res, \n will have no value to pop
+        break;
       case '\n':
-        printf("\t%.8g\n", pop());
+        v = pop();
+        printf("\t%.8g\n", v);
         break;
       default:
-        printf("error: unknown command %s\n", s);
+        // Exercise 4-6
+        if (type >= 'A' && type <= 'Z') {
+          last_var_index = type - 'A';
+          push(vars[last_var_index]);
+        } else if (type == 'v') {
+          push(v);
+        } else {
+          printf("error: unknown command %s\n", s);
+        }
         break;
     }
   }

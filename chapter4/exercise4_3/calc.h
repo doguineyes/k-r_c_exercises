@@ -1,5 +1,5 @@
 #define NUMBER '0'
-#define FUNCTION 'F'
+#define FUNCTION 'f'
 void push(double);
 double pop(void);
 double top(void);
