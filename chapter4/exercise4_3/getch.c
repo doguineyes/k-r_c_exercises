@@ -3,16 +3,21 @@
   Should ungets know about buf and bufp, or should it just use ungetch?
 
   Exercise 4-8 Suppose that there will never be more than one character of pushback. Modify getch and ungetch accordingly.
+
+  Exercise 4-9 Our getch and ungetch do not handle a pushed-back EOF correctly.
+  Decide what their properties ought to be if an EOF is pushed back, then implement your design.
 */
 #include <stdio.h>
 #include <string.h>
 
 #define BUFSIZE 100
-char buf[BUFSIZE];
+// char buf[BUFSIZE];
+//Exercise 4-9, use int buf to save EOF
+int buf[BUFSIZE];
 int bufp = 0;
 
 //Exercise 4-8
-char buf_s;
+int buf_s;
 int has_buf = 0;
 
 int getch(void) {

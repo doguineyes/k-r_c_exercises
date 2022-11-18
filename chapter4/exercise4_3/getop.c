@@ -14,14 +14,10 @@ int getop(char s[]) {
         s[++i] = c_next;
       } while (islower(c_next = getch()));
       s[++i] = '\0';
-      if (c_next != EOF) {
-        ungetch(c_next);
-      }
+      ungetch(c_next);
       return FUNCTION;
     } else {
-      if (c_next != EOF) {
-        ungetch(c_next);
-      }
+      ungetch(c_next);
     }
   }
   if (!isdigit(c) && c != '.' && c != '-') {
@@ -34,9 +30,7 @@ int getop(char s[]) {
       s[++i] = c_next;
       c = c_next;
     } else {
-      if (c_next != EOF) { // need check c != eof, why?
-        ungetch(c_next);
-      }
+      ungetch(c_next);
       return c;
     }
   }
@@ -49,8 +43,9 @@ int getop(char s[]) {
       ;
   }
   s[i] = '\0';
-  if (c != EOF) {
-    ungetch(c);
-  }
+  // Exercise 4-9 change ungetch to be able to get EOF
+  // if (c != EOF) {
+  ungetch(c);
+  // }
   return NUMBER;
 }
