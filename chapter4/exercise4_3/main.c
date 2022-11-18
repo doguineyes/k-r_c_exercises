@@ -4,13 +4,31 @@
 
   Exercise 4-4 Add commands to print the top element of the stack without popping,
   to du­ plicate it, and to swap the top two elements. Add a command to clear the stack.
+
+  Exercise 4-5 Add access to library functions like sin, exp, and pow.
 */
 #include <stdio.h>
 #include <stdlib.h> // atof
-#include <math.h> // for fmod, float mod
+#include <math.h> // for fmod, float mod; sin
+#include <string.h>
 #include "calc.h"
 
 #define MAXOP 100
+
+// Exercise 4-5
+void handle_function(char func[]) {
+  double op2;
+  if (strcmp(func, "sin") == 0) {
+    push(sin(pop()));
+  } else if (strcmp(func, "exp") == 0) {
+    push(exp(pop()));
+  } else if (strcmp(func, "pow") == 0) {
+    op2 = pop();
+    push(pow(pop(), op2));
+  } else {
+    printf("error: unknown function %s\n", func);
+  }
+}
 
 int main() {
   int type;
@@ -21,6 +39,9 @@ int main() {
     switch(type) {
       case NUMBER:
         push(atof(s));
+        break;
+      case FUNCTION: // Exercise 4-5
+        handle_function(s);
         break;
       case '+':
         push(pop() + pop());
