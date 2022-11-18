@@ -16,4 +16,9 @@ int main() {
   }
   assert(pop() == 99.0);
   assert(pop() == 98.0);
+
+  // Exercise 4-4
+  push(1133);
+  assert(top() == 1133);
+  assert(pop() == 1133);
 }

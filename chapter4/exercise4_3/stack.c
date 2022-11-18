@@ -20,3 +20,20 @@ double pop(void) {
     return 0.0;
   }
 }
+
+// Exercise 4-4
+
+// Get top element but do not pop
+double top(void) {
+  if (sp > 0)
+    return val[sp - 1];
+  else {
+    printf("error: stack empty\n");
+    return 0.0;
+  }
+}
+
+// Clear the stack
+void clear(void) {
+  sp = 0;
+}
