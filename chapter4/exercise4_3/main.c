@@ -1,3 +1,6 @@
+/*
+  Given the basic framework, it is straightforward to extend the calculator. Add the modulus (X) operator and provisions for negative numbers.
+*/
 #include <stdio.h>
 #include <stdlib.h> // atof
 #include <math.h> // for fmod, float mod
@@ -33,6 +36,7 @@ int main() {
           printf("error: zero divisor\n");
         }
         break;
+      // exercise 4-3
       case '%':
         op2 = pop();
         if (op2 != 0.0) {
