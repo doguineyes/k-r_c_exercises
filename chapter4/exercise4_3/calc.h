@@ -7,3 +7,4 @@ void clear(void);
 int getop(char []);
 int getch(void);
 void ungetch(int);
+void ungets(char []);
