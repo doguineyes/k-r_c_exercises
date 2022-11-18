@@ -1,5 +1,6 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> // atof
+#include <math.h> // for fmod, float mod
 #include "calc.h"
 
 #define MAXOP 100
@@ -28,6 +29,15 @@ int main() {
         op2 = pop();
         if (op2 != 0.0) {
           push(pop() / op2);
+        } else {
+          printf("error: zero divisor\n");
+        }
+        break;
+      case '%':
+        op2 = pop();
+        if (op2 != 0.0) {
+          // push((int)pop() % (int)op2);
+          push(fmod(pop(), op2));
         } else {
           printf("error: zero divisor\n");
         }

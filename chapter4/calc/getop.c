@@ -13,11 +13,13 @@ int getop(char s[]) {
   i = 0;
   // handle negative numbers
   if (c == '-') {
-    if(isdigit(c_next = getch())) {
+    if(isdigit(c_next = getch()) || c_next == '.') { // support .3 is 0.3, or -.3 is -0.3
       s[++i] = c_next;
       c = c_next;
     } else {
-      ungetch(c_next);
+      if (c != EOF) { // need check c != eof, why?
+        ungetch(c_next);
+      }
       return c;
     }
   }
