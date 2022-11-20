@@ -47,7 +47,9 @@ int main() {
 
   // while((type = getop(s)) != EOF) {
   //Exercise 4-10
-  while((type = getop_line(s)) != EOF) {
+  // while((type = getop_line(s)) != EOF) {
+  // Exercise 4-11
+  while((type = getop_static(s)) != EOF) {
     switch(type) {
       case NUMBER:
         push(atof(s));

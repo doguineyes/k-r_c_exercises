@@ -1,12 +1,16 @@
 /*
   Exercise 4-10 An alternate organization uses getline to read an entire input line;
   this makes getch and ungetch unnecessary. Revise the cakulator to use this approach.
+
+  Exercise 4-11 Modify get op so that it doesn't need to use ungetch.
+  Hint: use an internal static variable.
 */
 #include <stdio.h>
 #include <ctype.h>
 #include <string.h>
 #include "calc.h"
 #define LINE_BUFF_SIZE 200
+#define BUFSIZE 100
 
 int getop(char s[]) {
   int i, c, c_next;
@@ -154,4 +158,76 @@ int getop_line(char s[]) {
     }
   }
   return EOF;
+}
+
+// Exercise 4-11
+int getop_static(char s[]) {
+  static int buf[BUFSIZE];
+  static int bufp = 0;
+
+  int i, c, c_next;
+  while ((s[0] = c = ((bufp > 0) ? buf[--bufp] : getchar())) == ' ' || c == '\t')
+    ;
+  s[1] = '\0';
+  if (islower(c)) {
+    if (islower(c_next = ((bufp > 0) ? buf[--bufp] : getchar()))) {
+      i = 0;
+      do {
+        s[++i] = c_next;
+      } while (islower(c_next = ((bufp > 0) ? buf[--bufp] : getchar())));
+      s[++i] = '\0';
+      // ungetch(c_next);
+      if (bufp >= BUFSIZE) {
+        printf("ungetch: too many characters\n");
+      } else {
+        buf[bufp++] = c_next;
+      }
+      return FUNCTION;
+    } else {
+      // ungetch(c_next);
+      if (bufp >= BUFSIZE) {
+        printf("ungetch: too many characters\n");
+      } else {
+        buf[bufp++] = c_next;
+      }
+    }
+  }
+  if (!isdigit(c) && c != '.' && c != '-') {
+    return c;
+  }
+  i = 0;
+  // handle negative numbers
+  if (c == '-') {
+    if(isdigit(c_next = ((bufp > 0) ? buf[--bufp] : getchar())) || c_next == '.') { // support .3 is 0.3, or -.3 is -0.3
+      s[++i] = c_next;
+      c = c_next;
+    } else {
+      // ungetch(c_next);
+      if (bufp >= BUFSIZE) {
+        printf("ungetch: too many characters\n");
+      } else {
+        buf[bufp++] = c_next;
+      }
+      return c;
+    }
+  }
+  if (isdigit(c)) {
+    while (isdigit(s[++i] = c = ((bufp > 0) ? buf[--bufp] : getchar())))
+      ;
+  }
+  if (c == '.') {
+    while (isdigit(s[++i] = c = ((bufp > 0) ? buf[--bufp] : getchar())))
+      ;
+  }
+  s[i] = '\0';
+  // Exercise 4-9 change ungetch to be able to get EOF
+  // if (c != EOF) {
+  // ungetch(c);
+  // }
+  if (bufp >= BUFSIZE) {
+    printf("ungetch: too many characters\n");
+  } else {
+    buf[bufp++] = c;
+  }
+  return NUMBER;
 }

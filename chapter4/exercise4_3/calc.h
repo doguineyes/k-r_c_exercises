@@ -14,3 +14,4 @@ int getword(char []);
 int is_func(char []);
 int is_num(char []);
 int getop_line(char []);
+int getop_static(char []);
