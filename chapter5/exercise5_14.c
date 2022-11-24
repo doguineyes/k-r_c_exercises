@@ -1,10 +1,15 @@
 /*
   Exercise 5-14 Modify the sort program to handle a -r flag,
   which indicates sorting in reverse (decreasing) order. Be sure that -r works with -n.
+
+  Exercise 5-15 Add the option - f to fold upperand lower case together,
+  so that case distinctions are not made during sorting; for example, a and A compare equal.
 */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include <assert.h>
 #define MAXLINES 5000
 #define MAXSTORAGE 500000
 #define MAXLEN 100
@@ -92,10 +97,51 @@ int numcmp(char* s1, char* s2) {
   }
 }
 
+/*
+  Exercise 5-15
+*/
+int strcmp_i(char* s1, char* s2) {
+  int i;
+  char c1, c2;
+  for (i = 0; s1[i] != '\0' && s2[i] != '\0'; i++) {
+    c1 = tolower(s1[i]);
+    c2 = tolower(s2[i]);
+    if (c1 > c2) {
+      return i;
+    } else if (c1 < c2) {
+      return -i;
+    }
+  }
+  c1 = tolower(s1[i]);
+  c2 = tolower(s2[i]);
+  if (c1 > c2) {
+    return i;
+  } else if (c1 < c2) {
+    return -i;
+  } else {
+    return 0;
+  }
+}
+
+int strcmp_i_ans(char* s1, char* s2) {
+  for(; tolower(*s1) == tolower(*s2); s1++, s2++) {
+    if (*s1 == '\0') {
+      return 0;
+    }
+  }
+  return tolower(*s1) - tolower(*s2);
+}
+
 int main(int argc, char* argv[]) {
+  // assert(strcmp_i("hello", "HELLO") == 0);
+  // assert(strcmp_i("hello", "Hello") == 0);
+  // assert(strcmp_i("Hello", "helloa") < 0);
+  // assert(strcmp_i("helloA", "Hello") > 0);
+
   int nlines;
   int numeric = 0;
   int r = 1;
+  int ignore = 0;
   char storage [MAXSTORAGE];
 
   if (argc > 1) {
@@ -104,12 +150,14 @@ int main(int argc, char* argv[]) {
         numeric = 1;
       } else if (strcmp("-r", argv[i]) == 0) {
         r = -1;
+      } else if (strcmp("-f", argv[i]) == 0) {
+        ignore = 1;
       }
     }
   }
   if ((nlines = readlines(lineptr, storage, MAXLINES)) >= 0) {
     qsort_my((void **) lineptr, 0, nlines-1, 
-      (int (*)(void*, void*))(numeric ? numcmp : strcmp), r);
+      (int (*)(void*, void*))(numeric ? numcmp : (ignore ? strcmp_i_ans : strcmp)), r);
     writelines(lineptr, nlines);
     return 0;
   } else {
