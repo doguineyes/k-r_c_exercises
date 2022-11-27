@@ -1,0 +1,1 @@
+char* gettoken_test(void);
