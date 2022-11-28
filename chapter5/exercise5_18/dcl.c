@@ -1,3 +1,8 @@
+/*
+  Exercise 5-18 Make dcl recover from input errors.
+
+  Exercise 5-19 Modify undcl so that it does not add redundant parentheses to declarations.
+*/
 #include <string.h>
 #include <stdio.h>
 #include <ctype.h>
@@ -8,7 +13,11 @@
 
 enum { ERROR, NORMAL };
 
+enum { NO, YES };
+
 static int iserror = NORMAL;
+
+static int prevtoken = NO;
 
 void dcl(void);
 void dirdcl(void);
@@ -32,6 +41,11 @@ int gettoken(void) {
   int getch(void);
   void ungetch(int);
   char *p = token;
+
+  if (prevtoken == YES) {
+    prevtoken = NO;
+    return tokentype;
+  }
 
   while ((c = getch()) == ' ' || c == '\t') {
     ;
@@ -60,6 +74,13 @@ int gettoken(void) {
   } else {
     return tokentype = c;
   }
+}
+
+int nexttoken(void) {
+  int type;
+  type = gettoken();
+  prevtoken = YES;
+  return type;
 }
 
 void dirdcl(void) {
@@ -123,6 +144,35 @@ int dcl_main(void) {
     } else {
       return -1;
     }
+  }
+  return 0;
+}
+
+int undcl(void) {
+  int type;
+  char temp[MAXTOKEN];
+
+  while (gettoken() != EOF) {
+    strcpy(out, token);
+    while ((type = gettoken()) != '\n') {
+      if (type == PARENS || type == BRACKETS) {
+        strcat(out, token);
+      } else if (type == '*') {
+        if ((type = nexttoken()) == PARENS || type == BRACKETS) {
+          sprintf(temp, "(*%s)", out);
+        } else {
+          sprintf(temp, "*%s", out);
+        }
+        strcpy(out, temp);
+      } else if (type == NAME) {
+        sprintf(temp, "%s %s", token, out);
+        strcpy(out, temp);
+      } else {
+        printf("invalid input at %s\n", token);
+        return -1;
+      }
+    }
+    printf("%s\n", out);
   }
   return 0;
 }
