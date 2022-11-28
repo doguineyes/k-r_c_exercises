@@ -43,6 +43,11 @@ int main() {
   ungets(s4);
   assert(dcl_main() == -1);
 
+  char s5[] = "char func(int, int)\n";
+  ungetch(EOF);
+  ungets(s5);
+  assert(dcl_main() == 0);
+
   //Test undcl
   char dcl1[] = "x () * [] * () char\n";
   ungetch(EOF);

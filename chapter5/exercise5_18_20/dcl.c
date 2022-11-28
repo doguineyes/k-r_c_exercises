@@ -2,6 +2,8 @@
   Exercise 5-18 Make dcl recover from input errors.
 
   Exercise 5-19 Modify undcl so that it does not add redundant parentheses to declarations.
+
+  Exercise 5-20 Expand dcl to handle declarations with function argument types, qualifiers like const, and so on.
 */
 #include <string.h>
 #include <stdio.h>
@@ -76,6 +78,7 @@ int gettoken(void) {
   }
 }
 
+//Exercise 5-19
 int nexttoken(void) {
   int type;
   type = gettoken();
@@ -93,7 +96,7 @@ void dirdcl(void) {
     dcl();
     if (tokentype != ')') {
       // printf("error: missing )\n");
-      error("missing )");
+      error("1: missing )");
       return;
     }
   } else if (tokentype == NAME) {
@@ -103,13 +106,28 @@ void dirdcl(void) {
     error("expected name or (dcl)");
     return;
   }
-  while ((type = gettoken()) == PARENS || type == BRACKETS) {
+  while ((type = gettoken()) == PARENS || type == BRACKETS || type == '(') {
     if (type == PARENS) {
       strcat(out, " function returning");
-    } else {
+    } else if (type == BRACKETS) {
       strcat(out, " array");
       strcat(out, token);
       strcat(out, " of");
+    } else if (type == '(') {
+      //Exercise 5-20 NOT very correct
+      strcat(out, " function params (");
+      dcl();
+      strcat(out, token);
+      while (tokentype == ',') {
+        strcat(out, ", ");
+        dcl();
+        strcat(out, token);
+      }
+      if (tokentype != ')') {
+        error("2: missing )");
+        return;
+      }
+      strcat(out, ") returning");
     }
   }
 }
@@ -148,6 +166,7 @@ int dcl_main(void) {
   return 0;
 }
 
+//Exercise 5-19
 int undcl(void) {
   int type;
   char temp[MAXTOKEN];
@@ -158,6 +177,7 @@ int undcl(void) {
       if (type == PARENS || type == BRACKETS) {
         strcat(out, token);
       } else if (type == '*') {
+        //Exercise 5-19
         if ((type = nexttoken()) == PARENS || type == BRACKETS) {
           sprintf(temp, "(*%s)", out);
         } else {
