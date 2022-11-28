@@ -18,6 +18,10 @@ void ungetch(int c) {
   }
 }
 
+void clear_getchbuff(void) {
+  bufp = 0;
+}
+
 void ungets(char s[]) {
   int i;
   for (i = strlen(s)-1; i >= 0; i--) {

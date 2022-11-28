@@ -25,4 +25,19 @@ int main() {
   ungetch(EOF);
   ungets(s1);
   assert(dcl_main() == 0);
+
+  char s2[] = "(*(*x[3])())[5]\n";
+  ungetch(EOF);
+  ungets(s2);
+  assert(dcl_main() == -1);
+
+  char s3[] = "char (*pfa[]\n";
+  ungetch(EOF);
+  ungets(s3);
+  assert(dcl_main() == -1);
+
+  char s4[] = "char ()[]\n";
+  ungetch(EOF);
+  ungets(s4);
+  assert(dcl_main() == -1);
 }

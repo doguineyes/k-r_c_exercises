@@ -6,8 +6,13 @@
 
 #define MAXTOKEN 100
 
+enum { ERROR, NORMAL };
+
+static int iserror = NORMAL;
+
 void dcl(void);
 void dirdcl(void);
+void error(char*);
 
 //use by gettoken
 static int tokentype;
@@ -58,17 +63,24 @@ int gettoken(void) {
 }
 
 void dirdcl(void) {
+  if (iserror == ERROR) {
+    return;
+  }
   int type;
 
   if (tokentype == '(') {
     dcl();
     if (tokentype != ')') {
-      printf("error: missing )\n");
+      // printf("error: missing )\n");
+      error("missing )");
+      return;
     }
   } else if (tokentype == NAME) {
     strcpy(name, token);
   } else {
-    printf("error: expected name or (dcl)\n");
+    // printf("error: expected name or (dcl)\n");
+    error("expected name or (dcl)");
+    return;
   }
   while ((type = gettoken()) == PARENS || type == BRACKETS) {
     if (type == PARENS) {
@@ -82,6 +94,9 @@ void dirdcl(void) {
 }
 
 void dcl(void) {
+  if (iserror == ERROR) {
+    return;
+  }
   int ns;
 
   for (ns = 0; gettoken() == '*'; ) {
@@ -94,14 +109,32 @@ void dcl(void) {
 }
 
 int dcl_main(void) {
+  iserror = NORMAL;
   while (gettoken() != EOF) {
     strcpy(datatype, token);
     out[0] = '\0';
     dcl();
     if (tokentype != '\n') {
-      printf("syntax error\n");
+      // printf("syntax error\n");
+      error("syntax error");
     }
-    printf("%s: %s %s\n", name, out, datatype);
+    if (iserror == NORMAL) {
+      printf("%s: %s %s\n", name, out, datatype);
+    } else {
+      return -1;
+    }
   }
   return 0;
+}
+
+// Exercise 5-18
+void error(char* message) {
+  printf("Error: %s\n", message);
+  tokentype = -1;
+  token[0] = '\0';
+  name[0] = '\0';
+  datatype[0] = '\0';
+  out[0] = '\0';
+  clear_getchbuff();
+  iserror = ERROR;
 }
