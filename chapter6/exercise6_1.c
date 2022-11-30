@@ -23,7 +23,8 @@ int getword(char* word, int lim) {
   int c, next;
   char* w = word;
 
-  while(isspace(c = getch())) {
+  //getword can catch '\n'
+  while(isspace(c = getch()) && c != '\n') {
     ;
   }
 

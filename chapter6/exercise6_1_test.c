@@ -15,7 +15,7 @@ int main(void) {
 
   getword(word, MAXWORD);
   assert(strcmp(word, "world") == 0);
-
+  assert(getword(word, MAXWORD) == '\n');
   assert(getword(word, MAXWORD) == EOF);
   assert(strcmp(word, "") == 0);
 
@@ -41,4 +41,5 @@ int main(void) {
   
   getword(word, MAXWORD);
   assert(strcmp(word, "\"your word\"") == 0);
+  assert(getword(word, MAXWORD) == '\n');
 }
