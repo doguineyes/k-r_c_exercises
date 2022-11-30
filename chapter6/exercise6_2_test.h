@@ -1,0 +1,1 @@
+int treex_main(int, char*[]);
