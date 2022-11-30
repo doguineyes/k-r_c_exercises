@@ -7,7 +7,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include <assert.h>
 #include "exercise6_1.h" // getword
+#include "getch.h"
 
 #define MAXWORD 100
 #define YES 1
@@ -121,4 +123,12 @@ int lineindex(void) {
   }
   ptreeprint(root);
   return 0;
+}
+
+int main(void) {
+  char s1[] = "hello helcc helww 123 workk the a \nyour world wordd heljj workk heljj\n them and your my world hello\n your12 my12 world an hello";
+  ungetch(EOF);
+  ungets(s1);
+
+  lineindex();
 }
